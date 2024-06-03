@@ -1,102 +1,172 @@
-import Ionicons from '@expo/vector-icons/Ionicons';
-import { StyleSheet, Image, Platform } from 'react-native';
+import { StyleSheet, Image, Platform, ImageBackground, View, Text, Switch } from 'react-native';
+import Icon from '@expo/vector-icons/Octicons'
+import FwIcon from '@expo/vector-icons/FontAwesome5'
+import React, { useState } from 'react';
 
-import { Collapsible } from '@/components/Collapsible';
-import { ExternalLink } from '@/components/ExternalLink';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-
-export default function TabTwoScreen() {
+export default function Try() {
+  const [isEnabled, setIsEnabled] = useState(false);
+  const [form, setForm] = useState<any>({
+    isEnabled: false
+  })
+  const toggleSwitch = (value: any) => {
+    setForm({ ...form, isEnabled: !form.isEnabled })
+    setIsEnabled(previousState => !previousState)
+    console.log(value)
+  };
+  const [settingType, setSettingType] = useState<any[]>([
+    {
+      title: '位置',
+      type: 'text',
+      key: '',
+      icon: 'map-marker-alt'
+    },
+    {
+      title: '通知',
+      type: 'switch',
+      key: 'isEnabled',
+      icon: 'bell',
+      value: 'on'
+    },
+    {
+      title: '語言',
+      type: 'text',
+      key: '',
+      icon: 'align-justify'
+    },
+    {
+      title: '幫助中心',
+      type: 'text',
+      key: '',
+      icon: 'align-justify'
+    }
+  ])
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
-      headerImage={<Ionicons size={310} name="code-slash" style={styles.headerImage} />}>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Explore</ThemedText>
-      </ThemedView>
-      <ThemedText>This app includes example code to help you get started.</ThemedText>
-      <Collapsible title="File-based routing">
-        <ThemedText>
-          This app has two screens:{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/explore.tsx</ThemedText>
-        </ThemedText>
-        <ThemedText>
-          The layout file in <ThemedText type="defaultSemiBold">app/(tabs)/_layout.tsx</ThemedText>{' '}
-          sets up the tab navigator.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/router/introduction">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Android, iOS, and web support">
-        <ThemedText>
-          You can open this project on Android, iOS, and the web. To open the web version, press{' '}
-          <ThemedText type="defaultSemiBold">w</ThemedText> in the terminal running this project.
-        </ThemedText>
-      </Collapsible>
-      <Collapsible title="Images">
-        <ThemedText>
-          For static images, you can use the <ThemedText type="defaultSemiBold">@2x</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">@3x</ThemedText> suffixes to provide files for
-          different screen densities
-        </ThemedText>
-        <Image source={require('@/assets/images/react-logo.png')} style={{ alignSelf: 'center' }} />
-        <ExternalLink href="https://reactnative.dev/docs/images">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Custom fonts">
-        <ThemedText>
-          Open <ThemedText type="defaultSemiBold">app/_layout.tsx</ThemedText> to see how to load{' '}
-          <ThemedText style={{ fontFamily: 'SpaceMono' }}>
-            custom fonts such as this one.
-          </ThemedText>
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/versions/latest/sdk/font">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Light and dark mode components">
-        <ThemedText>
-          This template has light and dark mode support. The{' '}
-          <ThemedText type="defaultSemiBold">useColorScheme()</ThemedText> hook lets you inspect
-          what the user's current color scheme is, and so you can adjust UI colors accordingly.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Animations">
-        <ThemedText>
-          This template includes an example of an animated component. The{' '}
-          <ThemedText type="defaultSemiBold">components/HelloWave.tsx</ThemedText> component uses
-          the powerful <ThemedText type="defaultSemiBold">react-native-reanimated</ThemedText> library
-          to create a waving hand animation.
-        </ThemedText>
-        {Platform.select({
-          ios: (
-            <ThemedText>
-              The <ThemedText type="defaultSemiBold">components/ParallaxScrollView.tsx</ThemedText>{' '}
-              component provides a parallax effect for the header image.
-            </ThemedText>
-          ),
-        })}
-      </Collapsible>
-    </ParallaxScrollView>
+    <View style={styles.settingWrap}>
+      <Text style={styles.title}>Settings</Text>
+      <View style={styles.profile}>
+        <Image style={styles.profileImg} source={require('@/assets/images/profileImg.jpg')}></Image>
+        <View style={styles.profileText}>
+          <Text>Jace Wu</Text>
+          <Text style={{ color: 'rgb(192, 201, 221)' }}>我是個人介紹文字喔喔喔喔喔</Text>
+        </View>
+      </View>
+      <View style={styles.settingLayout}>
+        {
+          settingType.map((item, i) => {
+            return (
+              item.type === 'text' ? <View key={i} style={styles.settingItem} >
+                <View style={styles.iconArea}>
+                  <FwIcon
+                    name={item.icon}
+                    size={30}
+                    color="black"
+                  />
+                  <View>
+                    <Text style={styles.itemTitle}>{item.title}</Text>
+                    <Text style={styles.itemValue}>高雄市</Text>
+                  </View>
+                </View>
+                <Icon
+                  name="chevron-right"
+                  size={20}
+                  color="black"
+                />
+              </View> : item.type === 'switch' ? <View key={i} style={styles.settingItem}>
+                <View style={styles.iconArea}>
+                  <FwIcon
+                    name={form[item.key] ? 'bell' : 'bell-slash'}
+                    size={30}
+                    color="black"
+                  />
+                  <View>
+                    <Text style={styles.itemTitle}>{item.title}</Text>
+                    <Text style={styles.itemValue}>{form[item.key] ? 'on' : 'off'}</Text>
+                  </View>
+                </View>
+                <Switch
+                  trackColor={{ false: '#767577', true: '#81b0ff' }}
+                  thumbColor={form.isEnabled ? '#f5dd4b' : '#f4f3f4'}
+                  ios_backgroundColor="#3e3e3e"
+                  onValueChange={toggleSwitch}
+                  value={form[item.key]}
+                />
+              </View> :
+                <View key={i} style={styles.settingItem}>
+                  <Text style={styles.itemTitle}>位置</Text>
+                  <FwIcon
+                    name="frown-open"
+                    size={20}
+                    color="black"
+                  />
+                  <View>
+                    <Text style={styles.itemTitle}>{item.title}</Text>
+                    <Text style={styles.itemValue}>預設值</Text>
+                  </View>
+                </View>
+            )
+          })
+        }
+        {/* <View style={styles.settingItem}>
+          <Text>通知</Text>
+          <Switch
+            trackColor={{ false: '#767577', true: '#81b0ff' }}
+            thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
+            ios_backgroundColor="#3e3e3e"
+            onValueChange={toggleSwitch}
+            value={isEnabled}
+          />
+        </View> */}
+      </View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  headerImage: {
-    color: '#808080',
-    bottom: -90,
-    left: -35,
-    position: 'absolute',
+  settingWrap: {
+    gap: 5,
+    padding: 15
   },
-  titleContainer: {
+  title: {
+    alignSelf: 'center',
+    marginTop: 15,
+    fontSize: 34
+  },
+  profile: {
+    flexDirection: 'row'
+  },
+  profileImg: {
+    width: 50,
+    height: 50,
+    marginRight: 10
+  },
+  profileText: {
+    justifyContent: 'center',
+    gap: 5
+  },
+  settingLayout: {
+    marginTop: 20
+  },
+  settingItem: {
+    width: '100%',
+    height: 60,
+    backgroundColor: 'white',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderRadius: 15,
+    paddingHorizontal: 10,
     flexDirection: 'row',
-    gap: 8,
+    marginVertical: 5
   },
+  iconArea: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 15
+  },
+  itemTitle: {
+    fontSize: 18,
+    fontWeight: 'bold'
+  },
+  itemValue: {
+    color: 'gray'
+  }
 });

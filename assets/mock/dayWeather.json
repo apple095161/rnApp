@@ -1,0 +1,35 @@
+{
+  "mainWeather": "預計上午10點,晴時多雲。",
+  "weather": [
+    {
+      "time": "08:00",
+      "status": "sun",
+      "temp": "23"
+    },
+    {
+      "time": "10:00",
+      "status": "cloud",
+      "temp": "28"
+    },
+    {
+      "time": "12:00",
+      "status": "mist",
+      "temp": "30"
+    },
+    {
+      "time": "14:00",
+      "status": "cloud",
+      "temp": "31"
+    },
+    {
+      "time": "16:00",
+      "status": "mist",
+      "temp": "33"
+    },
+    {
+      "time": "18:00",
+      "status": "sun",
+      "temp": "35"
+    }
+  ]
+}
