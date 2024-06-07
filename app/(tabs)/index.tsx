@@ -1,32 +1,73 @@
-import { Image, StyleSheet, Platform, View, Text, useColorScheme, ImageBackground, Dimensions, SafeAreaView } from 'react-native';
+import {
+  Image,
+  StyleSheet,
+  Platform,
+  View,
+  Text,
+  useColorScheme,
+  ImageBackground,
+  Dimensions,
+  SafeAreaView,
+} from "react-native";
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+import React, { useRef, useCallback, useState } from "react";
+import { HelloWave } from "@/components/HelloWave";
+import ParallaxScrollView from "@/components/ParallaxScrollView";
+import { ThemedText } from "@/components/ThemedText";
+import { ThemedView } from "@/components/ThemedView";
 import Animated, {
   interpolate,
   useAnimatedRef,
   useAnimatedStyle,
   useScrollViewOffset,
-} from 'react-native-reanimated';
+} from "react-native-reanimated";
 
 import Icons from "react-native-vector-icons/FontAwesome";
-
-import Home from '@/components/weater/home'
-
+import BottomSheet, {
+  BottomSheetView,
+  BottomSheetModalProvider,
+} from "@gorhom/bottom-sheet";
+import Home from "@/components/weater/home";
 export default function HomeScreen() {
+  const [showBottom, setShowBottom] = useState<boolean>(false);
+  const [bottom, setBottom] = useState<string[]>(["1%", "1%"]);
+  const bottomSheetRef = useRef<BottomSheet>(null);
+  const handleSheetChanges = useCallback((index: number) => {
+    console.log("handleSheetChanges", index);
+  }, []);
+  const onClick = () => {
+    console.log(showBottom);
+    if (!showBottom) {
+      setBottom(["20%", "30%"]);
+      setShowBottom(true);
+      return;
+    }
+    setBottom(["1%", "1%"]);
+    setShowBottom(false);
+  };
   return (
-    <View style={{ flex: 1, width: '100%', height: '100%' }}>
-
-
+    <View
+      style={{ flex: 1, width: "100%", height: "100%", position: "relative" }}
+    >
       <ImageBackground
         source={require("../../assets/images/wind.jpg")}
         resizeMode="cover"
         style={{ height: "100%", width: "100%", maxWidth: 767 }}
       >
-        <Home></Home>
+        <Home showitem={onClick}></Home>
       </ImageBackground>
+      <BottomSheetModalProvider>
+        <BottomSheet
+          ref={bottomSheetRef}
+          onChange={handleSheetChanges}
+          snapPoints={bottom}
+          index={1}
+        >
+          <BottomSheetView style={styles.contentContainer}>
+            <Text style={{ flex: 1 }}>Awesome 🎉</Text>
+          </BottomSheetView>
+        </BottomSheet>
+      </BottomSheetModalProvider>
     </View>
     // <ParallaxScrollView
     //   headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
@@ -73,40 +114,38 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   searchWrap: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'row',
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "row",
     gap: 5,
-    marginTop: 15
+    marginTop: 15,
   },
   searchText: {
     fontSize: 24,
-    color: 'white',
-    marginRight: 5
+    color: "white",
+    marginRight: 5,
   },
-  searchInput: {
-
-  },
+  searchInput: {},
   circleWrap: {
-    width: '100%',
+    width: "100%",
     height: 400,
     marginTop: 15,
-    alignContent: 'center',
-    justifyContent: 'center',
-    flexDirection: 'row'
+    alignContent: "center",
+    justifyContent: "center",
+    flexDirection: "row",
   },
   circleLayout: {
-    backgroundColor: 'rgb(179, 179, 186)',
-    alignContent: 'center',
-    justifyContent: 'center',
-    width: '80%',
+    backgroundColor: "rgb(179, 179, 186)",
+    alignContent: "center",
+    justifyContent: "center",
+    width: "80%",
     maxWidth: 400,
     maxHeight: 400,
-    opacity: 0.5
+    opacity: 0.5,
   },
   titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 8,
   },
   stepContainer: {
@@ -118,19 +157,23 @@ const styles = StyleSheet.create({
     width: 290,
     bottom: 0,
     left: 0,
-    position: 'absolute',
+    position: "absolute",
   },
   container: {
     flex: 1,
   },
   header: {
     height: 250,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   content: {
     flex: 1,
     padding: 32,
     gap: 16,
-    overflow: 'hidden',
+    overflow: "hidden",
+  },
+  contentContainer: {
+    flex: 1,
+    alignItems: "center",
   },
 });

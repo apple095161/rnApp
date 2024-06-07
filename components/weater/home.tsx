@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useRef, useCallback, useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -8,16 +8,17 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
-  TextStyle
+  TextStyle,
 } from "react-native";
 import { Link } from "expo-router";
 import Icon from "react-native-vector-icons/FontAwesome5";
-import Icons from 'react-native-vector-icons/MaterialCommunityIcons'
+import Icons from "react-native-vector-icons/MaterialCommunityIcons";
 import DayWeaterLayout from "../../components/weater/dayWeater";
 import WeekWeather from "./weekWeather";
 import AirComponent from "./AirComponent";
 import * as Location from "expo-location";
-export default function Home() {
+
+export default function Home({ showitem }) {
   const [text, onChangeText] = useState("");
   const [location, setLocation] = useState([1, 2, 3, 4]);
   const [status, setStatus] = useState([
@@ -41,22 +42,23 @@ export default function Home() {
   const onPress = () => {
     setShowSearch(!showSearch);
   };
-  const clickEmit = (i: any) => { };
+  const clickEmit = (i: any) => {};
   useEffect(() => {
     handlePress();
     getLocation();
-  });
+  }, []);
   const getLocation = async () => {
     try {
       let status = await Location.requestForegroundPermissionsAsync();
       let { coords } = await Location.getCurrentPositionAsync();
       const myPosition = await fetch(
-        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${22.6542609},${coords.longitude
+        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${22.6542609},${
+          coords.longitude
         }&key=AIzaSyBuqwu7n7hZr3xMpZjw7IjkDltplqyANYk`,
         {
           headers: {
-            'Content-Type': 'application/json'
-          }
+            "Content-Type": "application/json",
+          },
         }
       )
         .then((response) => response.json())
@@ -83,8 +85,8 @@ export default function Home() {
       "https://opendata.cwa.gov.tw/api/v1/rest/datastore/F-D0047-067?Authorization=rdec-key-123-45678-011121314",
       {
         headers: {
-          'Content-Type': 'application/json'
-        }
+          "Content-Type": "application/json",
+        },
       }
     )
       .then((response) => response.json())
@@ -108,7 +110,24 @@ export default function Home() {
               alignItems: "center",
             }}
           >
-            <Text style={{ fontSize: 24, fontWeight: "bold", color: "#c0c9dd" }}>
+            <View>
+              <Icon
+                name="search"
+                size={15}
+                color="white"
+                onPress={() => {
+                  showitem();
+                }}
+              />
+            </View>
+            <Text
+              style={{
+                fontSize: 24,
+                fontWeight: "bold",
+                color: "#c0c9dd",
+                marginTop: 10,
+              }}
+            >
               高雄市,
               <Text style={{ color: "#c0c9dd" }}>前鎮區</Text>
             </Text>
@@ -134,42 +153,36 @@ export default function Home() {
               多雲時晴
             </Text>
           </View>
-          <View style={{ flexDirection: 'row', justifyContent: 'center', gap: 5 }}>
-            <Text style={{ fontSize: 18, fontWeight: 'bold', color: 'white' }}>最高34&#176;</Text>
-            <Text style={{ fontSize: 18, fontWeight: 'bold', color: 'white' }}>最低24&#176;</Text>
+          <View
+            style={{ flexDirection: "row", justifyContent: "center", gap: 5 }}
+          >
+            <Text style={{ fontSize: 18, fontWeight: "bold", color: "white" }}>
+              最高34&#176;
+            </Text>
+            <Text style={{ fontSize: 18, fontWeight: "bold", color: "white" }}>
+              最低24&#176;
+            </Text>
           </View>
 
-          <View style={{ flexDirection: 'row', flex: 1, marginHorizontal: 10, }}>
+          <View style={{ flexDirection: "row", flex: 1, marginHorizontal: 10 }}>
             <View style={styles.showDetail}>
               <View style={styles.showDetailinner}>
                 <Text style={styles.textLayout}>11.0 km/h</Text>
-                <Icon
-                  name="wind"
-                  size={30}
-                  color="white"
-                />
+                <Icon name="wind" size={30} color="white" />
                 <Text style={styles.textLayout}>西南風</Text>
               </View>
             </View>
-            <View style={[styles.showDetail, { flexBasis: '40%' }]}>
+            <View style={[styles.showDetail, { flexBasis: "40%" }]}>
               <View style={styles.showDetailinner}>
                 <Text style={styles.textLayout}>1000</Text>
-                <Icons
-                  name="car-brake-low-pressure"
-                  size={30}
-                  color="white"
-                />
+                <Icons name="car-brake-low-pressure" size={30} color="white" />
                 <Text style={styles.textLayout}>氣壓</Text>
               </View>
             </View>
             <View style={styles.showDetail}>
               <View style={styles.showDetailinner}>
                 <Text style={styles.textLayout}>49%</Text>
-                <Icon
-                  name="cloud-showers-heavy"
-                  size={30}
-                  color="white"
-                />
+                <Icon name="cloud-showers-heavy" size={30} color="white" />
                 <Text style={styles.textLayout}>濕度</Text>
               </View>
             </View>
@@ -190,14 +203,13 @@ export default function Home() {
 }
 const styles = StyleSheet.create({
   viewWrap: {
-    height: '100%',
-    width: '100%',
+    height: "100%",
+    width: "100%",
     paddingBottom: 15,
-    paddingTop: 20
+    paddingTop: 20,
   },
   safeWrap: {
-    flex: 1,
-    paddingTop: 30
+    paddingTop: 30,
   },
   searchWrap: {
     position: "absolute",
@@ -227,23 +239,27 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   showDetail: {
-    flexBasis: '30%',
-    justifyContent: 'center',
-    alignItems: 'center',
+    flexBasis: "30%",
+    justifyContent: "center",
+    alignItems: "center",
     paddingHorizontal: 5,
     height: 120,
-    marginTop: 15
+    marginTop: 15,
   },
   showDetailinner: {
     borderRadius: 10,
-    backgroundColor: 'rgba(236, 245, 255, 0.5)',
-    width: '100%',
-    height: '100%',
-    alignItems: 'center',
-    justifyContent: 'space-evenly'
+    backgroundColor: "rgba(236, 245, 255, 0.5)",
+    width: "100%",
+    height: "100%",
+    alignItems: "center",
+    justifyContent: "space-evenly",
   },
   textLayout: {
     fontSize: 16,
-    color: 'white'
-  }
+    color: "white",
+  },
+  contentContainer: {
+    flex: 1,
+    alignItems: "center",
+  },
 });
