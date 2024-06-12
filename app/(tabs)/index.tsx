@@ -7,10 +7,12 @@ import {
   useColorScheme,
   ImageBackground,
   Dimensions,
-  SafeAreaView,
+  ScrollView,
+  TouchableOpacity,
+  TextInput
 } from "react-native";
 
-import React, { useRef, useCallback, useState } from "react";
+import React, { useRef, useCallback, useState, useEffect } from "react";
 import { HelloWave } from "@/components/HelloWave";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedText } from "@/components/ThemedText";
@@ -23,15 +25,19 @@ import Animated, {
 } from "react-native-reanimated";
 
 import Icons from "react-native-vector-icons/FontAwesome";
+import zipData from '../../assets/mock/twZipCode.json';
 import BottomSheet, {
   BottomSheetView,
   BottomSheetModalProvider,
+  BottomSheetTextInput
 } from "@gorhom/bottom-sheet";
 import Home from "@/components/weater/home";
 export default function HomeScreen() {
   const [showBottom, setShowBottom] = useState<boolean>(false);
   const [bottom, setBottom] = useState<string[]>(["1%", "1%"]);
   const bottomSheetRef = useRef<BottomSheet>(null);
+  const [serachitem, setSearchitem] = useState<any[]>([])
+  const [text, onChangeText] = useState<string>('');
   const handleSheetChanges = useCallback((index: number) => {
     console.log("handleSheetChanges", index);
   }, []);
@@ -45,6 +51,10 @@ export default function HomeScreen() {
     setBottom(["1%", "1%"]);
     setShowBottom(false);
   };
+  useEffect(() => {
+    const item = zipData.cities.filter(item => item.name === '高雄市')[0].region
+    setSearchitem(item)
+  }, []);
   return (
     <View
       style={{ flex: 1, width: "100%", height: "100%", position: "relative" }}
@@ -63,9 +73,29 @@ export default function HomeScreen() {
           snapPoints={bottom}
           index={1}
         >
-          <BottomSheetView style={styles.contentContainer}>
-            <Text style={{ flex: 1 }}>Awesome 🎉</Text>
+          <BottomSheetView >
+            <View style={styles.serchArea}>
+              <ScrollView showsHorizontalScrollIndicator={false}>
+                <TextInput
+                  style={styles.textInput}
+                  onChangeText={onChangeText}
+                  value={text}
+                />
+                <BottomSheetTextInput value="" ></BottomSheetTextInput>
+                {
+                  serachitem.map(city => {
+                    return (<TouchableOpacity
+                      style={styles.touchable}
+                      onPress={() => { }}
+                      activeOpacity={0.8}>
+                      <Text>{city.name}</Text>
+                    </TouchableOpacity>)
+                  })
+                }
+              </ScrollView>
+            </View>
           </BottomSheetView>
+
         </BottomSheet>
       </BottomSheetModalProvider>
     </View>
@@ -175,5 +205,22 @@ const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
     alignItems: "center",
+  },
+  serchArea: {
+    height: "100%",
+    padding: 10
+  },
+  touchable: {
+    width: '100%',
+    borderBottomWidth: 1,
+    borderBottomColor: 'black',
+    paddingVertical: 10
+  },
+  textInput: {
+    marginHorizontal: 12,
+    marginBottom: 12,
+    padding: 12,
+    borderRadius: 12,
+    borderWidth: 1,
   },
 });

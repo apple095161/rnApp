@@ -1,9 +1,16 @@
 import { StyleSheet, Image, Platform, ImageBackground, View, Text, Switch } from 'react-native';
 import Icon from '@expo/vector-icons/Octicons'
 import FwIcon from '@expo/vector-icons/FontAwesome5'
+import MaterialIcon from '@expo/vector-icons/MaterialCommunityIcons'
 import React, { useState } from 'react';
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { NavigationContainer, useNavigation } from "@react-navigation/native";
+import login from "../login";
+
 
 export default function Try() {
+  const Stack = createNativeStackNavigator();
+  const { navigate } = useNavigation<any>();
   const [isEnabled, setIsEnabled] = useState(false);
   const [form, setForm] = useState<any>({
     isEnabled: false
@@ -38,6 +45,12 @@ export default function Try() {
       type: 'text',
       key: '',
       icon: 'align-justify'
+    },
+    {
+      title: '註冊',
+      type: 'text',
+      key: '',
+      icon: 'user'
     }
   ])
   return (
@@ -63,18 +76,23 @@ export default function Try() {
                   />
                   <View>
                     <Text style={styles.itemTitle}>{item.title}</Text>
-                    <Text style={styles.itemValue}>高雄市</Text>
+                    <Text style={styles.itemValue}>預設值</Text>
                   </View>
                 </View>
                 <Icon
                   name="chevron-right"
                   size={20}
                   color="black"
+                  onPress={() => {
+                    if (item.title === '註冊') {
+                      navigate("login", { login });
+                    }
+                  }}
                 />
               </View> : item.type === 'switch' ? <View key={i} style={styles.settingItem}>
                 <View style={styles.iconArea}>
-                  <FwIcon
-                    name={form[item.key] ? 'bell' : 'bell-slash'}
+                  <MaterialIcon
+                    name={form[item.key] ? 'bell-check-outline' : 'bell-cancel-outline'}
                     size={30}
                     color="black"
                   />

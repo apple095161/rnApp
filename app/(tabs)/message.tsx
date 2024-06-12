@@ -8,13 +8,31 @@ import {
   Text,
   Button,
   Pressable,
+  ScrollView,
+  TouchableOpacity
 } from "react-native";
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import login from "../login";
+import React, { useState } from 'react';
 
 const TabTwoScreen = () => {
-  const Stack = createNativeStackNavigator();
+  const [messageList, setMessageList] = useState<string[] | number[]>([
+    'Lois Houle',
+    'Vince Pearce',
+    'Abigail Francis',
+    'Joan Armstrong',
+    'Gerard Parkinson',
+    'Polly Lucas',
+    'Cade Barber',
+    'Maria Estrada',
+    'Cary Mack',
+    'Sigmund Curry',
+    'Greg Bates',
+    'Geneva Shelton',
+    'Molly Harper',
+    'Isabella Curreyw'
+  ]);
 
   const HomeScreen = () => {
     const { navigate } = useNavigation<any>();
@@ -29,31 +47,60 @@ const TabTwoScreen = () => {
     );
   };
   return (
-    <View>
-      <View style={styles.viewWrap}>
-        <Stack.Navigator>
-          <Stack.Screen name="feed" component={HomeScreen}></Stack.Screen>
-        </Stack.Navigator>
-        <View style={{ marginTop: 30 }}>
-          <Text>您有5條消息未讀</Text>
-        </View>
-        <View style={styles.btnArea}>
-          <View style={styles.iconWarp}>
-            <Icon name="search" size={40} color="black" />
-          </View>
-          <View style={styles.iconWarp}>
-            <Icon name="search" size={40} color="black" />
-          </View>
-          <View style={styles.iconWarp}>
-            <Icon name="search" size={40} color="black" />
-          </View>
-        </View>
-      </View>
+    <View style={{backgroundColor:'white'}}>
+      <Text style={styles.chatTitle}>ChatList</Text>
+      <ScrollView showsHorizontalScrollIndicator={false}>
+        {
+          messageList.map(item => {
+            return (<TouchableOpacity
+
+              style={styles.touchable}
+              onPress={() => { }}
+              activeOpacity={0.8}>
+              <Image style={styles.chatIma} source={{
+                uri: `https://i.pravatar.cc/150?img=${item}`,
+              }}></Image>
+              <View>
+                <Text style={styles.UserName}>{item}</Text>
+                <Text style={styles.shortmessage}>message</Text>
+              </View>
+            </TouchableOpacity>)
+          })
+        }
+      </ScrollView>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  chatTitle: {
+    textAlign: 'center',
+    fontSize: 24,
+    paddingVertical: 10,
+  },
+  touchable: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%',
+    borderBottomWidth: 1,
+    borderBottomColor: '#f8f8f8',
+    borderTopWidth: 1,
+    borderTopColor: '#f8f8f8',
+    padding: 10
+  },
+  chatIma: {
+    width: 40,
+    height: 40,
+    borderRadius: 10,
+    marginRight: 10
+  },
+  UserName: {
+    fontSize: 16,
+    fontWeight: 'bold'
+  },
+  shortmessage: {
+    color: 'gray'
+  },
   headerImage: {
     color: "#808080",
     bottom: -90,
